@@ -1,1 +1,317 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>脳ちゃれ</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Yu Gothic',sans-serif;background:#fffaf1;color:#2d3a3a;margin:0}.wrap{max-width:760px;margin:auto;padding:24px}.card{background:#fff;border:2px solid #d9e6df;border-radius:24px;padding:28px;text-align:center}h1{font-size:44px}.btn{width:100%;padding:20px;border:0;border-radius:18px;background:#5f9d7b;color:#fff;font-size:30px;font-weight:800;margin:14px 0}.item{display:inline-flex;width:42%;min-height:120px;margin:2%;border:3px solid #d9e6df;border-radius:18px;align-items:center;justify-content:center;flex-direction:column;font-size:56px;background:#fff}.item span{font-size:20px}.sel{border-color:#5f9d7b;background:#eef7f2}.hide{display:none}.note{background:#eef7f2;border-radius:16px;padding:15px;font-size:22px;line-height:1.6}.small{font-size:17px;color:#667}</style></head><body><div class="wrap"><div class="card" id="app"></div></div><script>const sets=[{m:[['🍎','りんご'],['🐶','いぬ'],['🚲','じてんしゃ']],d:[['🚌','バス'],['🍞','パン'],['🌂','かさ']]},{m:[['🍌','バナナ'],['🐱','ねこ'],['🚗','くるま']],d:[['🍎','りんご'],['🐟','さかな'],['🚌','バス']]},{m:[['🍊','みかん'],['🐰','うさぎ'],['🚌','バス']],d:[['🍌','バナナ'],['🐶','いぬ'],['🚲','じてんしゃ']]}];let ci=+(localStorage.nc||0)%sets.length;localStorage.nc=(ci+1)%sets.length;let S=sets[ci],sel=[];function page(n){let a=document.getElementById('app');if(n==0)a.innerHTML='<div style="font-size:80px">🧠🌱</div><h1>脳ちゃれ</h1><p class="note">ゲーム感覚で、脳のいろいろな働きを使ってみましょう。</p><button class="btn" onclick="page(1)">はじめる</button><p class="small">※これは認知症を診断する検査ではありません。</p>';if(n==1)a.innerHTML='<h1>おぼえてね！</h1><p class="note">この3つを覚えてください。あとでもう一度聞きます。</p>'+S.m.map(x=>'<div class="item">'+x[0]+'<span>'+x[1]+'</span></div>').join('')+'<button class="btn" onclick="page(2)">覚えました</button>';if(n==2){let q=[...S.m.map(x=>[...x,1]),...S.d.map(x=>[...x,0])].sort(()=>Math.random()-.5);a.innerHTML='<h1>何を覚えていた？</h1><p class="note">最初に出てきた3つを選んでください。</p>'+q.map((x,i)=>'<button class="item" data-ok="'+x[2]+'" onclick="this.classList.toggle(\'sel\')">'+x[0]+'<span>'+x[1]+'</span></button>').join('')+'<button class="btn" onclick="page(3)">決定</button>'}if(n==3)a.innerHTML='<div style="font-size:80px">🌸🧠✨</div><h1>おつかれさまでした！</h1><p class="note"><b>最近、もの忘れが気になりますか？</b><br>少しでも気になったら、相談のタイミングです。早めの相談が、これからの安心につながります。</p><button class="btn" onclick="location.reload()">もう一度</button><p class="small">必要に応じてスタッフがMini-Cogなどで確認します。</p>'}page(0)</script></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>山香病院 脳の元気度チャレンジ</title>
+<style>
+  :root{
+    --bg:#fffaf1;
+    --card:#ffffff;
+    --text:#2d3a3a;
+    --muted:#6d7a78;
+    --line:#d9e6df;
+    --accent:#5f9d7b;
+    --accent2:#f0b86e;
+    --soft:#eef7f2;
+    --warn:#fff3d8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:24px 18px 40px;
+  }
+  .brand{
+    text-align:center;
+    font-weight:700;
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  .card{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 8px 24px rgba(0,0,0,.06);
+  }
+  h1{
+    font-size:clamp(34px,6vw,56px);
+    line-height:1.2;
+    margin:8px 0 18px;
+    text-align:center;
+  }
+  h2{
+    font-size:clamp(28px,5vw,42px);
+    text-align:center;
+    margin:4px 0 18px;
+  }
+  p{
+    font-size:clamp(20px,3.5vw,28px);
+    line-height:1.7;
+  }
+  .big-emoji{
+    font-size:88px;
+    text-align:center;
+    margin:10px 0;
+  }
+  .instruction{
+    background:var(--soft);
+    border-radius:18px;
+    padding:16px 18px;
+    text-align:center;
+    font-weight:700;
+    font-size:clamp(20px,3.5vw,28px);
+    margin:18px 0;
+  }
+  .btn{
+    display:block;
+    width:100%;
+    border:none;
+    border-radius:18px;
+    padding:18px 20px;
+    margin:14px 0;
+    font-size:clamp(24px,4vw,34px);
+    font-weight:800;
+    background:var(--accent);
+    color:white;
+    cursor:pointer;
+    min-height:72px;
+  }
+  .btn.secondary{
+    background:#e8efe9;
+    color:var(--text);
+  }
+  .btn.choice{
+    background:#fff;
+    color:var(--text);
+    border:3px solid var(--line);
+  }
+  .btn.choice.selected{
+    border-color:var(--accent);
+    background:var(--soft);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+  }
+  .emoji-card{
+    font-size:64px;
+    min-height:130px;
+    background:#fff;
+    border:3px solid var(--line);
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    cursor:pointer;
+    padding:12px;
+  }
+  .emoji-card span{
+    font-size:20px;
+    margin-top:6px;
+  }
+  .emoji-card.selected{
+    border-color:var(--accent);
+    background:var(--soft);
+  }
+  .stage{display:none}
+  .stage.active{display:block}
+  .progress{height:12px;background:#e9eee9;border-radius:999px;overflow:hidden;margin:12px 0 24px}
+  .progress > div{height:100%;background:var(--accent2);width:0%;transition:.3s}
+  .small{font-size:18px;color:var(--muted);line-height:1.6}
+  .result-box{background:var(--soft);border-radius:18px;padding:18px;margin:14px 0;font-size:22px}
+  .staff{border-top:3px dashed var(--line);margin-top:26px;padding-top:20px}
+  .staff h3{font-size:28px;margin:0 0 10px}
+  .cycle-badge{display:inline-block;background:#fff3d8;border:2px solid #f0b86e;border-radius:999px;padding:8px 14px;font-weight:800;margin:0 auto 12px}
+  .badge{display:inline-block;padding:8px 12px;border-radius:999px;background:var(--warn);font-weight:700;margin:4px}
+  .num-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+  .num{min-height:96px;border:3px solid var(--line);background:#fff;border-radius:18px;font-size:34px;font-weight:900}
+  .hidden{display:none!important}
+  @media (max-width:600px){.grid{grid-template-columns:1fr 1fr}.card{padding:20px}}
+  .count-btn{touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,.08);cursor:pointer}
+  .count-btn.selected-count{outline:4px solid #245c4a;transform:scale(1.06);font-weight:900}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">杵築市立 山香病院</div>
+  <div style="text-align:center"><span class="cycle-badge" id="cycleBadge">問題セット</span></div>
+  <div class="progress"><div id="bar"></div></div>
+
+  <section class="card stage active" id="s0">
+    <div class="big-emoji">🧠🌱</div>
+    <h1>脳の元気度チャレンジ</h1>
+    <p style="text-align:center">楽しみながら、脳をちょっと動かしてみましょう。</p>
+    <div class="instruction">所要時間：約3〜4分</div>
+    <button class="btn" onclick="go(1)">スタート！</button>
+    <p class="small">※これは認知症を診断する検査ではありません。気づきのきっかけとして行う簡単な体験です。</p>
+  </section>
+
+  <section class="card stage" id="s1">
+    <h2>STEP 1　おぼえてね！</h2>
+    <p style="text-align:center">この3つを、よく見て覚えてください。あとでもう一度聞きます。</p>
+    <div class="grid" id="memoryGrid"></div>
+    <button class="btn" onclick="go(2)">覚えました</button>
+  </section>
+
+  <section class="card stage" id="s2">
+    <h2>STEP 2　どこが変わった？</h2>
+    <p style="text-align:center">まず、この絵をよく見てください。</p>
+    <div class="grid" id="scene1"></div>
+    <button class="btn" id="showChangeBtn" onclick="showChangedScene()">つぎへ</button>
+    <div id="scene2" class="hidden">
+      <p style="text-align:center;font-weight:700">変わったものを1つタップしてください。</p>
+      <div class="grid" id="scene2Grid"></div>
+      <button class="btn hidden" id="to3" onclick="go(3)">つぎへ</button>
+    </div>
+  </section>
+
+  <section class="card stage" id="s3">
+    <h2>STEP 3　お買い物チャレンジ</h2>
+    <div class="instruction" id="shopInstruction"></div>
+    <p style="text-align:center">覚えたら「お買い物へ」を押してください。</p>
+    <button class="btn" id="shopStart" onclick="startShop()">お買い物へ</button>
+    <div id="shopArea" class="hidden">
+      <p style="text-align:center;font-weight:700">必要なものを選んでください。</p>
+      <div class="grid" id="shopGrid"></div>
+      <div class="instruction" id="countQuestion"></div>
+      <div class="num-grid" id="countGrid">
+        <button type="button" class="num count-btn" data-count="1">1</button>
+        <button type="button" class="num count-btn" data-count="2">2</button>
+        <button type="button" class="num count-btn" data-count="3">3</button>
+      </div>
+      <div id="countSelected" style="text-align:center;font-weight:800;font-size:1.25rem;min-height:2em"></div>
+      <button type="button" class="btn" onclick="finishShop()">決定</button>
+    </div>
+  </section>
+
+  <section class="card stage" id="s4">
+    <h2>STEP 4　順番にタッチ！</h2>
+    <p style="text-align:center">1 → 2 → 3 → 4 → 5 の順番にタップしてください。</p>
+    <div class="num-grid" id="seqGrid">
+      <button class="num" onclick="tapSeq(3,this)">3</button>
+      <button class="num" onclick="tapSeq(1,this)">1</button>
+      <button class="num" onclick="tapSeq(5,this)">5</button>
+      <button class="num" onclick="tapSeq(2,this)">2</button>
+      <button class="num" onclick="tapSeq(4,this)">4</button>
+      <button class="num" disabled>✓</button>
+    </div>
+    <div id="seqMsg" class="instruction">1から始めてください</div>
+    <button class="btn hidden" id="to5" onclick="go(5)">つぎへ</button>
+  </section>
+
+  <section class="card stage" id="s5">
+    <h2>STEP 5　何を覚えていた？</h2>
+    <p style="text-align:center">最初に出てきた3つを選んでください。</p>
+    <div class="grid" id="recallGrid"></div>
+    <button class="btn" onclick="finishRecall()">決定</button>
+  </section>
+
+  <section class="card stage" id="s6">
+    <div class="big-emoji">🌸🧠✨</div>
+    <h2>おつかれさまでした！</h2>
+    <p style="text-align:center">脳はいろいろな働きを使っていました。</p>
+    <div class="instruction">最近、もの忘れが気になりますか？</div>
+    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+      <button class="btn choice" onclick="setConcern(this,'気にならない')">😊<br>気にならない</button>
+      <button class="btn choice" onclick="setConcern(this,'少し気になる')">🤔<br>少し気になる</button>
+      <button class="btn choice" onclick="setConcern(this,'とても気になる')">😟<br>とても気になる</button>
+    </div>
+    <div class="result-box" style="margin-top:20px">
+      <strong>🌱 もの忘れが少しでも気になったら、それは相談のタイミングです。</strong><br>
+      認知症を見つけるためではなく、これからも元気に暮らすための「脳の健康相談」です。<br>
+      早めに相談しておくことが、これからの安心にもつながります。
+    </div>
+    <div class="instruction">気になることがあれば、スタッフにお気軽にお声かけください。</div>
+    <div class="staff">
+      <h3>スタッフ用 結果メモ</h3>
+      <div id="staffResults"></div>
+      <div class="result-box"><strong>次のご案内：</strong><br>
+        □ 経過観察　□ 健康づくりの助言　□ Mini-Cogで確認<br>
+        □ 個別相談　□ 健診案内　□ 医療機関への相談・受診案内
+      </div>
+      <p class="small">※このゲーム単独で認知症の有無を判定しません。問診や本人・家族の困りごと、必要に応じた標準化された評価と合わせて判断してください。</p>
+      <button class="btn secondary" onclick="resetGame()">最初から</button>
+    </div>
+  </section>
+</div>
+<script>
+let scores={change:null,shop:null,seqErrors:0,seqCompleted:false,recallCorrect:0,recallFalse:0};
+let milkCount=null;
+let concern='未回答';
+let seqExpected=1;
+const variants=[
+ {mem:[['🍎','りんご'],['🐶','いぬ'],['🚲','じてんしゃ']],distract:[['🚌','バス'],['🍞','パン'],['🌂','かさ']],scene:[['☕','コーヒー'],['🌷','花'],['📖','本'],['🕰️','時計']],changed:['🌻','花',1],shop:[['apple','🍎','りんご'],['milk','🥛','牛乳'],['bread','🍞','パン'],['banana','🍌','バナナ']],targets:['apple','milk'],countItem:'milk',countName:'牛乳',count:2},
+ {mem:[['🍌','バナナ'],['🐱','ねこ'],['🚗','くるま']],distract:[['🍎','りんご'],['🐟','さかな'],['🚌','バス']],scene:[['🧢','ぼうし'],['🌼','花'],['📕','本'],['⌚','時計']],changed:['🌹','花',1],shop:[['egg','🥚','たまご'],['tea','🍵','お茶'],['bread','🍞','パン'],['orange','🍊','みかん']],targets:['egg','tea'],countItem:'egg',countName:'たまご',count:3},
+ {mem:[['🍊','みかん'],['🐰','うさぎ'],['🚌','バス']],distract:[['🍌','バナナ'],['🐶','いぬ'],['🚲','じてんしゃ']],scene:[['☂️','かさ'],['🌸','花'],['📗','本'],['🧸','ぬいぐるみ']],changed:['🌺','花',1],shop:[['bread','🍞','パン'],['milk','🥛','牛乳'],['apple','🍎','りんご'],['fish','🐟','さかな']],targets:['bread','milk'],countItem:'bread',countName:'パン',count:2},
+ {mem:[['🍞','パン'],['🐼','パンダ'],['🚃','でんしゃ']],distract:[['🍙','おにぎり'],['🐱','ねこ'],['🚗','くるま']],scene:[['🍵','お茶'],['🌷','花'],['📘','本'],['🕰️','時計']],changed:['🌻','花',1],shop:[['banana','🍌','バナナ'],['egg','🥚','たまご'],['milk','🥛','牛乳'],['apple','🍎','りんご']],targets:['banana','egg'],countItem:'egg',countName:'たまご',count:2},
+ {mem:[['🍙','おにぎり'],['🐟','さかな'],['🚕','タクシー']],distract:[['🍞','パン'],['🐰','うさぎ'],['🚌','バス']],scene:[['☕','コーヒー'],['🪴','はちうえ'],['📖','本'],['⌚','時計']],changed:['🌵','はちうえ',1],shop:[['orange','🍊','みかん'],['tea','🍵','お茶'],['bread','🍞','パン'],['egg','🥚','たまご']],targets:['orange','tea'],countItem:'orange',countName:'みかん',count:3},
+ {mem:[['🍓','いちご'],['🐘','ぞう'],['🚲','じてんしゃ']],distract:[['🍊','みかん'],['🐶','いぬ'],['🚗','くるま']],scene:[['🧢','ぼうし'],['🌼','花'],['📙','本'],['🕰️','時計']],changed:['🎩','ぼうし',0],shop:[['milk','🥛','牛乳'],['apple','🍎','りんご'],['banana','🍌','バナナ'],['bread','🍞','パン']],targets:['milk','banana'],countItem:'milk',countName:'牛乳',count:3},
+ {mem:[['🥚','たまご'],['🐱','ねこ'],['🚌','バス']],distract:[['🍎','りんご'],['🐟','さかな'],['🚲','じてんしゃ']],scene:[['☕','コーヒー'],['🌷','花'],['📚','ほん'],['⏰','めざまし時計']],changed:['📖','ほん',2],shop:[['tea','🍵','お茶'],['bread','🍞','パン'],['orange','🍊','みかん'],['egg','🥚','たまご']],targets:['tea','bread'],countItem:'bread',countName:'パン',count:3},
+ {mem:[['🍵','お茶'],['🐶','いぬ'],['🚗','くるま']],distract:[['🥛','牛乳'],['🐰','うさぎ'],['🚃','でんしゃ']],scene:[['☂️','かさ'],['🌸','花'],['📗','本'],['⌚','時計']],changed:['⏰','時計',3],shop:[['apple','🍎','りんご'],['egg','🥚','たまご'],['milk','🥛','牛乳'],['orange','🍊','みかん']],targets:['apple','egg'],countItem:'apple',countName:'りんご',count:2},
+ {mem:[['🥛','牛乳'],['🐰','うさぎ'],['🚃','でんしゃ']],distract:[['🍵','お茶'],['🐱','ねこ'],['🚕','タクシー']],scene:[['🧢','ぼうし'],['🪴','はちうえ'],['📘','本'],['🕰️','時計']],changed:['🌵','はちうえ',1],shop:[['banana','🍌','バナナ'],['tea','🍵','お茶'],['bread','🍞','パン'],['milk','🥛','牛乳']],targets:['banana','tea'],countItem:'tea',countName:'お茶',count:2},
+ {mem:[['🍇','ぶどう'],['🐼','パンダ'],['🚲','じてんしゃ']],distract:[['🍓','いちご'],['🐘','ぞう'],['🚌','バス']],scene:[['☕','コーヒー'],['🌼','花'],['📕','本'],['⌚','時計']],changed:['🍵','お茶',0],shop:[['orange','🍊','みかん'],['milk','🥛','牛乳'],['egg','🥚','たまご'],['bread','🍞','パン']],targets:['orange','milk'],countItem:'milk',countName:'牛乳',count:2}
+];
+let cycleIndex=Number(localStorage.getItem('nochareCycle')||'0')%variants.length;
+const V=variants[cycleIndex];
+localStorage.setItem('nochareCycle',String((cycleIndex+1)%variants.length));
+let shopCount=null;
+function renderVariant(){
+ const cb=document.getElementById('cycleBadge');if(cb)cb.textContent=`問題セット ${cycleIndex+1} / 10`;
+ document.getElementById('memoryGrid').innerHTML=V.mem.map(x=>`<div class="emoji-card">${x[0]}<span>${x[1]}</span></div>`).join('');
+ document.getElementById('scene1').innerHTML=V.scene.map(x=>`<div class="emoji-card">${x[0]}<span>${x[1]}</span></div>`).join('');
+ document.getElementById('scene2Grid').innerHTML=V.scene.map((x,i)=>{const y=i===V.changed[2]?[V.changed[0],V.changed[1]]:x;return `<button class="emoji-card" onclick="answerChange(this,${i===V.changed[2]})">${y[0]}<span>${y[1]}</span></button>`}).join('');
+ const targetNames=V.targets.map(id=>V.shop.find(x=>x[0]===id)[2]);
+ document.getElementById('shopInstruction').textContent=`${targetNames[0]}を1つ、${targetNames[1]}を${V.count}つ買ってください。`;
+ document.getElementById('shopGrid').innerHTML=V.shop.map(x=>`<button class="emoji-card" data-item="${x[0]}" onclick="toggleShop(this)">${x[1]}<span>${x[2]}</span></button>`).join('');
+ document.getElementById('countQuestion').textContent=`${V.countName}はいくつでしたか？`;
+ const all=[...V.mem.map(x=>[x[0],x[1],1]),...V.distract.map(x=>[x[0],x[1],0])].sort(()=>Math.random()-.5);
+ document.getElementById('recallGrid').innerHTML=all.map(x=>`<button class="emoji-card" data-ok="${x[2]}" onclick="toggleRecall(this)">${x[0]}<span>${x[1]}</span></button>`).join('');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  renderVariant();
+  document.querySelectorAll('.count-btn').forEach(btn=>{
+    const choose=(ev)=>{
+      ev.preventDefault();
+      shopCount=Number(btn.dataset.count);
+      milkCount=shopCount;
+      document.querySelectorAll('.count-btn').forEach(b=>b.classList.remove('selected-count'));
+      btn.classList.add('selected-count');
+      const msg=document.getElementById('countSelected');
+      if(msg)msg.textContent=`${shopCount} を選びました`;
+    };
+    btn.addEventListener('click',choose);
+    btn.addEventListener('touchend',choose,{passive:false});
+  });
+});
+function go(n){document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));document.getElementById('s'+n).classList.add('active');document.getElementById('bar').style.width=Math.min(n/6*100,100)+'%';window.scrollTo({top:0,behavior:'smooth'});if(n===6)renderStaff()}
+function showChangedScene(){document.getElementById('scene1').classList.add('hidden');document.getElementById('showChangeBtn').classList.add('hidden');document.getElementById('scene2').classList.remove('hidden')}
+function answerChange(el,correct){document.querySelectorAll('#scene2 .emoji-card').forEach(x=>x.disabled=true);el.classList.add('selected');scores.change=correct;document.getElementById('to3').classList.remove('hidden')}
+function startShop(){document.getElementById('shopStart').classList.add('hidden');document.querySelector('#s3 .instruction').classList.add('hidden');document.getElementById('shopArea').classList.remove('hidden')}
+function toggleShop(el){el.classList.toggle('selected')}
+function finishShop(){if(shopCount===null){const msg=document.getElementById('countSelected');if(msg)msg.textContent='数字を1つ選んでください';return}const selected=[...document.querySelectorAll('#shopArea .emoji-card.selected')].map(x=>x.dataset.item);const correctItems=V.targets.every(x=>selected.includes(x))&&selected.length===V.targets.length;scores.shop=correctItems&&Number(shopCount)===Number(V.count);go(4)}
+function tapSeq(n,el){if(n===seqExpected){el.disabled=true;el.style.opacity=.35;seqExpected++;document.getElementById('seqMsg').textContent=seqExpected<=5?seqExpected+'をタップしてください':'できました！';if(seqExpected===6){scores.seqCompleted=true;document.getElementById('to5').classList.remove('hidden')}}else{scores.seqErrors++;document.getElementById('seqMsg').textContent='順番をもう一度確認してみましょう'}}
+function toggleRecall(el){el.classList.toggle('selected')}
+function finishRecall(){const selected=[...document.querySelectorAll('#recallGrid .emoji-card.selected')];scores.recallCorrect=selected.filter(x=>x.dataset.ok==='1').length;scores.recallFalse=selected.filter(x=>x.dataset.ok==='0').length;go(6)}
+function setConcern(el,value){concern=value;document.querySelectorAll('#s6 .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');renderStaff()}
+function renderStaff(){
+ const mem=scores.recallCorrect===3&&scores.recallFalse===0?'スムーズ':scores.recallCorrect>=2&&scores.recallFalse<=1?'少し迷いあり':'要確認';
+ const attention=scores.change?'スムーズ':'少し迷いあり';
+ const exec=(scores.shop&&scores.seqErrors===0)?'スムーズ':(scores.shop||(scores.seqCompleted&&scores.seqErrors<=2))?'少し迷いあり':'要確認';
+ let mini=(mem==='要確認'||exec==='要確認'||!scores.change||scores.recallFalse>=2||concern==='少し気になる'||concern==='とても気になる');
+ document.getElementById('staffResults').innerHTML=`<div class="result-box"><div><span class="badge">問題セット</span> ${cycleIndex+1} / 10</div><div><span class="badge">記憶</span> ${mem}</div><div><span class="badge">注意・視覚記憶</span> ${attention}</div><div><span class="badge">遂行機能</span> ${exec}</div><div><span class="badge">順番タッチの誤反応</span> ${scores.seqErrors}回</div><div><span class="badge">遅延再生</span> 正答 ${scores.recallCorrect}/3　誤選択 ${scores.recallFalse}</div><div><span class="badge">本人の気づき</span> ${concern}</div></div><div class="result-box"><strong>スタッフ向け目安：</strong><br>${mini?'問診や本人の困りごとも確認し、必要に応じて Mini-Cog での確認を検討してください。':'大きなつまずきは目立ちませんでした。問診や本人の困りごとがあれば、必要に応じて個別に確認してください。'}</div>`;
+}
+function resetGame(){shopCount=null;milkCount=null;scores={change:null,shop:null,seqErrors:0,seqCompleted:false,recallCorrect:0,recallFalse:0};concern='未回答';seqExpected=1;location.reload()}
+</script>
+</body>
+</html>
